@@ -2,7 +2,6 @@ package bob.estacionar;
 
 import bob.estacionar.cadastroDeVeiculos.inteface.MenuCadastroVeiculos;
 import bob.estacionar.cadastroDeVeiculos.servicos.SistemaCadastroVeiculos;
-
 import java.util.Scanner;
 
 public class Main {

@@ -5,8 +5,10 @@ import bob.estacionar.cadastroDeVeiculos.dominio.Veiculo;
 import bob.estacionar.cadastroDeVeiculos.dominio.veiculos.Caminhao;
 import bob.estacionar.cadastroDeVeiculos.dominio.veiculos.Onibus;
 import bob.estacionar.cadastroDeVeiculos.servicos.SistemaCadastroVeiculos;
+import bob.estacionar.exception.VeiculoInvalidoException;
 
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MenuCadastroVeiculos {
@@ -68,10 +70,39 @@ public class MenuCadastroVeiculos {
 
     private void cadastrarVeiculo() {
         System.out.println("====== CADASTRO DE VEICULO ======");
-        System.out.println("Informe a placa do veículo");
-        String placa = scanner.next();
-        System.out.println("Informe o ano do veículo: ");
-        int ano = scanner.nextInt();
+        String placa = null;
+        int ano = 0;
+
+        try {
+
+            System.out.println("Informe a placa do veículo (formato: XXX-9999):");
+            placa = scanner.nextLine();
+
+            if (!placa.matches("[A-Z]{3}-\\d{4}")) {
+                throw new VeiculoInvalidoException("Placa inválida. Formato esperado: XXX-9999");
+            }
+
+            boolean anoValido = false;
+            while (!anoValido){
+                try {
+                    System.out.println("Informe o ano do veículo: (formato: AAAA)");
+                    String anoStr = scanner.nextLine();
+
+                    if(anoStr.matches("\\d{4}")){
+                        ano = Integer.parseInt(anoStr);
+                        anoValido = true;
+                    }else {
+                        System.out.println("Ano inválido. Digite um número de 4 digitos: (ex: 2023");
+                    }
+                } catch (NumberFormatException e){
+                    System.out.println("Ano inválido. Digite um numero inteiro!");
+                }
+            }
+
+        } catch (VeiculoInvalidoException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
         System.out.println("Selecione o tipo do veículo: ");
         int index = 1;
