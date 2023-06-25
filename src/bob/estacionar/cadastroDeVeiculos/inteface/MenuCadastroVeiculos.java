@@ -70,38 +70,43 @@ public class MenuCadastroVeiculos {
 
     private void cadastrarVeiculo() {
         System.out.println("====== CADASTRO DE VEICULO ======");
+
         String placa = null;
         int ano = 0;
 
-        try {
+        boolean placaValida = false;
+        while (!placaValida){
+            try{
+                System.out.println("Informe a placa do veículo (formato: XXX-9999):");
+                String placaStr = scanner.nextLine();
 
-            System.out.println("Informe a placa do veículo (formato: XXX-9999):");
-            placa = scanner.nextLine();
-
-            if (!placa.matches("[A-Z]{3}-\\d{4}")) {
-                throw new VeiculoInvalidoException("Placa inválida. Formato esperado: XXX-9999");
-            }
-
-            boolean anoValido = false;
-            while (!anoValido){
-                try {
-                    System.out.println("Informe o ano do veículo: (formato: AAAA)");
-                    String anoStr = scanner.nextLine();
-
-                    if(anoStr.matches("\\d{4}")){
-                        ano = Integer.parseInt(anoStr);
-                        anoValido = true;
-                    }else {
-                        System.out.println("Ano inválido. Digite um número de 4 digitos: (ex: 2023");
-                    }
-                } catch (NumberFormatException e){
-                    System.out.println("Ano inválido. Digite um numero inteiro!");
+                if (placaStr.matches("[A-Z]{3}-\\d{4}")) {
+                    placa = placaStr;
+                    placaValida = true;
+                }else {
+                    throw new VeiculoInvalidoException("Placa inválida. Formato esperado: XXX-9999");
                 }
-            }
 
-        } catch (VeiculoInvalidoException e) {
-            System.out.println(e.getMessage());
-            return;
+            }catch (VeiculoInvalidoException e){
+                System.out.println(e.getMessage());
+            }
+        }
+
+        boolean anoValido = false;
+        while (!anoValido){
+            try {
+                System.out.println("Informe o ano do veículo: (formato: AAAA)");
+                String anoStr = scanner.nextLine();
+
+                if(anoStr.matches("\\d{4}")){
+                    ano = Integer.parseInt(anoStr);
+                    anoValido = true;
+                }else {
+                    System.out.println("Ano inválido. Digite um número de 4 digitos: (ex: 2023");
+                }
+            } catch (NumberFormatException e){
+                System.out.println("Ano inválido. Digite um numero inteiro!");
+            }
         }
 
         System.out.println("Selecione o tipo do veículo: ");
@@ -115,31 +120,64 @@ public class MenuCadastroVeiculos {
 
         while (tipoVeiculo == null) {
             System.out.println("Escolha uma opção: ");
-            int opcaoTipo = scanner.nextInt();
+            String opcaoTipoStr = scanner.nextLine();
 
-            switch (opcaoTipo) {
-                case 1:
-                    tipoVeiculo = TipoVeiculo.ONIBUS;
-                    break;
-                case 2:
-                    tipoVeiculo = TipoVeiculo.CAMINHAO;
-                    break;
-                default:
-                    System.out.println("Opcão invalida. Por favor, escolha uma opção válida!");
-                    break;
+            try {
+                int opcaoTipo = Integer.parseInt(opcaoTipoStr);
+
+                switch (opcaoTipo) {
+                    case 1:
+                        tipoVeiculo = TipoVeiculo.ONIBUS;
+                        break;
+                    case 2:
+                        tipoVeiculo = TipoVeiculo.CAMINHAO;
+                        break;
+                    default:
+                        System.out.println("Opcão invalida. Por favor, escolha uma opção válida!");
+                        break;
+                }
+            }catch (NumberFormatException e){
+                System.out.println("Opção invalida, digite um numero inteiro.");
             }
         }
 
         Veiculo veiculo;
 
         if (tipoVeiculo == TipoVeiculo.ONIBUS) {
-            System.out.println("Informe a quantidade de assentos: ");
-            int qtdAssentos = scanner.nextInt();
+            int qtdAssentos = 0;
+            boolean qtdAssentosValida = false;
+
+            while (!qtdAssentosValida){
+                System.out.println("Informe a quantidade de assentos: ");
+                String qtdAssentosStr = scanner.nextLine();
+
+                try{
+                    qtdAssentos = Integer.parseInt(qtdAssentosStr);
+                    qtdAssentosValida = true;
+                } catch (NumberFormatException e){
+                    System.out.println("Quantidade de assentos inválidas, digite um numero inteiro");
+                }
+            }
+
             veiculo = new Onibus(placa, ano, tipoVeiculo);
             ((Onibus) veiculo).setQtdAssentos(qtdAssentos);
+
         } else {
-            System.out.println("Informe a quantidade de eixos: ");
-            int qtdEixos = scanner.nextInt();
+            int qtdEixos = 0;
+            boolean qtdEixosValida = false;
+
+            while (!qtdEixosValida){
+                System.out.println("Informe a quantidade de eixos: ");
+                String qtdEixosStr = scanner.nextLine();
+
+                try {
+                    qtdEixos = Integer.parseInt(qtdEixosStr);
+                    qtdEixosValida = true;
+                }catch (NumberFormatException e){
+                    System.out.println("Quantidade de eixos invalida, digite um numeto inteiro.");
+                }
+            }
+
             veiculo = new Caminhao(placa, ano, tipoVeiculo);
             ((Caminhao) veiculo).setQtdEixos(qtdEixos);
         }
