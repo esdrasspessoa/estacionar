@@ -7,8 +7,6 @@ import bob.estacionar.cadastroDeVeiculos.dominio.veiculos.Onibus;
 import bob.estacionar.cadastroDeVeiculos.servicos.SistemaCadastroVeiculos;
 import bob.estacionar.exception.VeiculoInvalidoException;
 
-
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MenuCadastroVeiculos {
