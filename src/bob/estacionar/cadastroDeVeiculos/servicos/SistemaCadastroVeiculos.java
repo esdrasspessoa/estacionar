@@ -42,10 +42,6 @@ public class SistemaCadastroVeiculos {
 
             veiculos[qtdVeiculos - 1] = null;
             qtdVeiculos--;
-
-            System.out.println("Veiculo " + placa + " removido com sucesso!");
-        } else {
-            System.out.println("Veiculo não encontrado!");
         }
     }
 

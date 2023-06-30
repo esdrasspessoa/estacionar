@@ -11,11 +11,13 @@ public abstract class Veiculo {
         this.tipoVeiculo = tipoVeiculo;
     }
 
-    public void exibirDados(){
-       // System.out.println("------------------------");
-        System.out.println("Tipo de Veiculo: " + this.tipoVeiculo.getDescricao());
-        System.out.println("Placa: " + this.placa);
-        System.out.println("Ano: " + this.ano);
+    public String exibirDados() {
+        StringBuilder dados = new StringBuilder();
+        dados.append("--------------------------------\n");
+        dados.append("Tipo de Veiculo: ").append(this.tipoVeiculo.getDescricao());
+        dados.append("Placa: ").append(this.placa).append("\n");
+        dados.append("Ano: ").append(this.ano).append("\n");
+        return dados.toString();
     }
 
     public String getPlaca() {

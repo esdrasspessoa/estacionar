@@ -12,9 +12,10 @@ public class Caminhao extends Veiculo {
     }
 
     @Override
-    public void exibirDados() {
-        super.exibirDados();
-        System.out.println("Eixos: " + this.qtdEixos);
+    public String exibirDados() {
+        StringBuilder dados = new StringBuilder(super.exibirDados());
+       dados.append("Eixos: ").append(this.qtdEixos).append("\n");
+        return dados.toString();
     }
 
     public int getQtdEixos() {

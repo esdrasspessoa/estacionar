@@ -11,9 +11,10 @@ public class Onibus extends Veiculo {
     }
 
     @Override
-    public void exibirDados() {
-        super.exibirDados();
-        System.out.println("Assentos: " + this.qtdAssentos);
+    public String exibirDados() {
+        StringBuilder dados = new StringBuilder(super.exibirDados());
+        dados.append("Assentos: ").append(this.qtdAssentos).append("\n");
+        return dados.toString();
     }
 
     public int getQtdAssentos() {
