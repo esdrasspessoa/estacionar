@@ -13,10 +13,10 @@ public abstract class Veiculo {
 
     public String exibirDados() {
         StringBuilder dados = new StringBuilder();
-        dados.append("--------------------------------\n");
-        dados.append("Tipo de Veiculo: ").append(this.tipoVeiculo.getDescricao());
+        dados.append("Tipo de Veiculo: ").append(this.tipoVeiculo.getDescricao()).append("\n");
         dados.append("Placa: ").append(this.placa).append("\n");
         dados.append("Ano: ").append(this.ano).append("\n");
+        dados.append("--------------------------------\n");
         return dados.toString();
     }
 
