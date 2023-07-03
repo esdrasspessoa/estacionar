@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuCadastroVeiculosSwing extends JFrame {
     private final SistemaCadastroVeiculos sistemaCadastro;
@@ -15,16 +17,18 @@ public class MenuCadastroVeiculosSwing extends JFrame {
     private JButton removerButton;
     private JButton exibirButton;
     private JTextArea veiculosTextArea;
+    private JPanel painelBotoes;
+    private List<JLabel> vagaLabels;
 
     public MenuCadastroVeiculosSwing(SistemaCadastroVeiculos sistemaCadastro) {
         this.sistemaCadastro = sistemaCadastro;
-
         setTitle("Cadastro de Veiculos");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         criarComponentes();
         adicionarComponentes();
+        atualizarStatusVagasLabels();
         anexarOuvintes();
 
         pack();
@@ -41,15 +45,50 @@ public class MenuCadastroVeiculosSwing extends JFrame {
     }
 
     private void adicionarComponentes() {
-        JPanel painelBotoes = new JPanel();
+        painelBotoes = new JPanel();
         painelBotoes.add(cadastrarButton);
         painelBotoes.add(removerButton);
         painelBotoes.add(exibirButton);
 
+        JPanel painelVagas = new JPanel();
+        painelVagas.setLayout(new GridLayout(SistemaCadastroVeiculos.LIMITE_MAXIMO_VEICULOS, 1));
+
+        inicializarVagaLabels();
+
+        for (JLabel label:vagaLabels) {
+            painelVagas.add(label);
+        }
+
+        atualizarStatusVagasLabels();
+
         JScrollPane scrollPane = new JScrollPane(veiculosTextArea);
 
-        add(painelBotoes, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        JPanel painelPrincipal = new JPanel(new BorderLayout());
+        painelPrincipal.add(painelBotoes, BorderLayout.NORTH);
+        painelPrincipal.add(painelVagas, BorderLayout.CENTER);
+        painelPrincipal.add(scrollPane, BorderLayout.SOUTH);
+
+        add(painelPrincipal);
+    }
+
+   private void inicializarVagaLabels(){
+        vagaLabels = new ArrayList<>();
+
+        for (int i = 0; i < SistemaCadastroVeiculos.LIMITE_MAXIMO_VEICULOS; i++) {
+            JLabel label = new JLabel("Vaga " + (i + 1) + ": Disponivel");
+            vagaLabels.add(label);
+        }
+    }
+
+    public void atualizarStatusVagasLabels() {
+        boolean[] vagasDisponiveis = sistemaCadastro.getVagasDisponiveis();
+
+        for (int i = 0; i < vagasDisponiveis.length; i++) {
+            JLabel label = vagaLabels.get(i);
+            boolean vagaDisponivel = vagasDisponiveis[i];
+            String vagaStatus = vagaDisponivel ? "Disponível" : "Ocupada";
+            label.setText("Vaga " + (i + 1) + ": " + vagaStatus);
+        }
     }
 
     private void anexarOuvintes() {
@@ -88,28 +127,31 @@ public class MenuCadastroVeiculosSwing extends JFrame {
         JOptionPane.showMessageDialog(null, "====== CADASTRO DE VEICULO ======");
         String placa = Utils.obterPlaca();
 
-        if (placa != null){
+        if (placa != null) {
             int ano = Utils.obterAno();
             TipoVeiculo tipoVeiculo = Utils.obterTipoVeiculo();
             Veiculo veiculo = Utils.criarVeiculo(placa, ano, tipoVeiculo);
             sistemaCadastro.cadastrarVeiculo(veiculo);
-            JOptionPane.showMessageDialog(null,"Veiculo cadastro com sucesso!");
+            atualizarStatusVagasLabels();
+            JOptionPane.showMessageDialog(null, "Veiculo cadastrado com sucesso!");
+            atualizarStatusVagasLabels();
         } else {
             JOptionPane.showMessageDialog(null, "Operação cancelada. Nenhum veículo cadastrado.");
         }
     }
 
     private void removerVeiculo() {
-        JOptionPane.showMessageDialog(null,"====== REMOVER VEÍCULO ======");
+        JOptionPane.showMessageDialog(null, "====== REMOVER VEÍCULO ======");
 
         String placa = JOptionPane.showInputDialog("Informe a placa do veículo a ser removido: ");
         int qtdVeiculosAntesRemocao = sistemaCadastro.getQtdVeiculos();
 
         sistemaCadastro.removerVeiculo(placa);
+        atualizarStatusVagasLabels();
 
-        if (sistemaCadastro.getQtdVeiculos() < qtdVeiculosAntesRemocao){
+        if (sistemaCadastro.getQtdVeiculos() < qtdVeiculosAntesRemocao) {
             JOptionPane.showMessageDialog(null, "Veiculo " + placa + " Removido com sucesso!");
-        }else {
+        } else {
             JOptionPane.showMessageDialog(null, "Veiculo não encontrado");
         }
     }
@@ -120,9 +162,14 @@ public class MenuCadastroVeiculosSwing extends JFrame {
         if (sistemaCadastro.getQtdVeiculos() == 0) {
             veiculosCadastrados.append("Não há veículos cadastrados.");
         } else {
-            for (int i = 0; i < sistemaCadastro.getQtdVeiculos(); i++) {
+
+            sistemaCadastro.atualizarStatusVagas();
+
+            for (int i = 0; i < sistemaCadastro.getVeiculos().length; i++) {
                 Veiculo veiculo = sistemaCadastro.getVeiculos()[i];
-                veiculosCadastrados.append(veiculo.exibirDados());
+
+                veiculosCadastrados.append("\n\nVaga: ").append(i + 1);
+                veiculosCadastrados.append("\n").append(veiculo != null ? veiculo.exibirDados() : "Vaga vazia");
             }
         }
 
