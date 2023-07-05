@@ -5,9 +5,8 @@ import bob.estacionar.cadastroDeVeiculos.dominio.Veiculo;
 import bob.estacionar.cadastroDeVeiculos.servicos.SistemaCadastroVeiculos;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +15,8 @@ public class MenuCadastroVeiculosSwing extends JFrame {
     private JButton cadastrarButton;
     private JButton removerButton;
     private JButton exibirButton;
-    private JTextArea veiculosTextArea;
     private JPanel painelBotoes;
+    private JTable tabelaVagas;
     private List<JLabel> vagaLabels;
 
     public MenuCadastroVeiculosSwing(SistemaCadastroVeiculos sistemaCadastro) {
@@ -28,6 +27,7 @@ public class MenuCadastroVeiculosSwing extends JFrame {
 
         criarComponentes();
         adicionarComponentes();
+        inicializarVagaLabels();
         atualizarStatusVagasLabels();
         anexarOuvintes();
 
@@ -40,8 +40,6 @@ public class MenuCadastroVeiculosSwing extends JFrame {
         cadastrarButton = new JButton("Cadastrar Veículo");
         removerButton = new JButton("Remover Veículo");
         exibirButton = new JButton("Exibir Veículos");
-        veiculosTextArea = new JTextArea(10, 30);
-        veiculosTextArea.setEditable(false);
     }
 
     private void adicionarComponentes() {
@@ -50,23 +48,28 @@ public class MenuCadastroVeiculosSwing extends JFrame {
         painelBotoes.add(removerButton);
         painelBotoes.add(exibirButton);
 
-        JPanel painelVagas = new JPanel();
-        painelVagas.setLayout(new GridLayout(SistemaCadastroVeiculos.LIMITE_MAXIMO_VEICULOS, 1));
+        //Criar as colunas
+        String[] colunas = {"VAGA", "STATUS DA VAGA"};
 
-        inicializarVagaLabels();
-
-        for (JLabel label:vagaLabels) {
-            painelVagas.add(label);
+        //Cria dados da tabela
+        Object[][] dados = new Object[SistemaCadastroVeiculos.LIMITE_MAXIMO_VEICULOS][2];
+        for (int i = 0; i < SistemaCadastroVeiculos.LIMITE_MAXIMO_VEICULOS; i++) {
+            dados[i][0] = "Vaga " + (i + 1);
+            dados[i][1] = "Disponivel";
         }
 
-        atualizarStatusVagasLabels();
+        //Cria o modelo de tabela com os dados e colunas
+        DefaultTableModel modeloTabela = new DefaultTableModel(dados, colunas);
 
-        JScrollPane scrollPane = new JScrollPane(veiculosTextArea);
+        //Cria a tabela com o modelo
+        tabelaVagas = new JTable(modeloTabela);
 
         JPanel painelPrincipal = new JPanel(new BorderLayout());
         painelPrincipal.add(painelBotoes, BorderLayout.NORTH);
-        painelPrincipal.add(painelVagas, BorderLayout.CENTER);
-        painelPrincipal.add(scrollPane, BorderLayout.SOUTH);
+
+        JScrollPane scrollPane = new JScrollPane(tabelaVagas);
+        tabelaVagas.setPreferredScrollableViewportSize(tabelaVagas.getPreferredSize());
+        painelPrincipal.add(scrollPane, BorderLayout.CENTER);
 
         add(painelPrincipal);
     }
@@ -82,45 +85,21 @@ public class MenuCadastroVeiculosSwing extends JFrame {
 
     public void atualizarStatusVagasLabels() {
         boolean[] vagasDisponiveis = sistemaCadastro.getVagasDisponiveis();
+        DefaultTableModel modeloTabela = (DefaultTableModel) tabelaVagas.getModel();
 
         for (int i = 0; i < vagasDisponiveis.length; i++) {
-            JLabel label = vagaLabels.get(i);
             boolean vagaDisponivel = vagasDisponiveis[i];
             String vagaStatus = vagaDisponivel ? "Disponível" : "Ocupada";
-            label.setText("Vaga " + (i + 1) + ": " + vagaStatus);
+            modeloTabela.setValueAt(vagaStatus, i, 1);
         }
     }
 
     private void anexarOuvintes() {
-        cadastrarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cadastrarVeiculo();
-            }
-        });
+        cadastrarButton.addActionListener(e -> cadastrarVeiculo());
 
-        removerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removerVeiculo();
-            }
-        });
+        removerButton.addActionListener(e -> removerVeiculo());
 
-        exibirButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                exibirVeiculos();
-            }
-        });
-    }
-
-    public void executarMenu() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MenuCadastroVeiculosSwing(sistemaCadastro);
-            }
-        });
+        exibirButton.addActionListener(e -> exibirVeiculos());
     }
 
     private void cadastrarVeiculo() {
