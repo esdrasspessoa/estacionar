@@ -4,6 +4,7 @@ import bob.estacionar.cadastroDeVeiculos.dominio.TipoVeiculo;
 import bob.estacionar.cadastroDeVeiculos.dominio.Veiculo;
 import bob.estacionar.cadastroDeVeiculos.dominio.veiculos.Caminhao;
 import bob.estacionar.cadastroDeVeiculos.dominio.veiculos.Onibus;
+import bob.estacionar.exception.CancelarEntradaException;
 import bob.estacionar.exception.VeiculoInvalidoException;
 
 import javax.swing.*;
@@ -18,9 +19,10 @@ public class Utils {
                 String placaStr = JOptionPane.showInputDialog("Informe a placa do veículo (formato: XXX-9999):");
 
                 if (placaStr == null){
-                    // Usuário cancelou a entrada da placa
                     return null;
                 }
+
+                placaStr = placaStr.toUpperCase();
 
                 if (placaStr.matches("[A-Z]{3}-\\d{4}")) {
                     placa = placaStr;
@@ -45,6 +47,11 @@ public class Utils {
             try {
                 String anoStr = JOptionPane.showInputDialog("Informe o ano do veículo: (formato: AAAA)");
 
+                if (anoStr == null) {
+                    // Usuário cancelou a entrada do ano
+                   throw new CancelarEntradaException();
+                }
+
                 if (anoStr.matches("\\d{4}")) {
                     ano = Integer.parseInt(anoStr);
                     anoValido = true;
@@ -53,6 +60,9 @@ public class Utils {
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Ano inválido. Digite um numero inteiro!");
+            } catch (CancelarEntradaException e){
+                JOptionPane.showMessageDialog(null, e.getMessage());
+                return 0;
             }
         }
 

@@ -3,6 +3,7 @@ package bob.estacionar.cadastroDeVeiculos.inteface;
 import bob.estacionar.cadastroDeVeiculos.dominio.TipoVeiculo;
 import bob.estacionar.cadastroDeVeiculos.dominio.Veiculo;
 import bob.estacionar.cadastroDeVeiculos.servicos.SistemaCadastroVeiculos;
+import bob.estacionar.exception.CancelarEntradaException;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,6 +19,8 @@ public class MenuCadastroVeiculosSwing extends JFrame {
     private JPanel painelBotoes;
     private JTable tabelaVagas;
     private List<JLabel> vagaLabels;
+    private JPanel painelTitulo;
+    private JLabel labelTitulo;
 
     public MenuCadastroVeiculosSwing(SistemaCadastroVeiculos sistemaCadastro) {
         this.sistemaCadastro = sistemaCadastro;
@@ -37,6 +40,8 @@ public class MenuCadastroVeiculosSwing extends JFrame {
     }
 
     private void criarComponentes() {
+        labelTitulo = new JLabel("Bem-vindo ao Estacionar!");
+        labelTitulo.setFont(new Font("Arial", Font.BOLD, 16));
         cadastrarButton = new JButton("Cadastrar Veículo");
         removerButton = new JButton("Remover Veículo");
         exibirButton = new JButton("Exibir Veículos");
@@ -47,6 +52,13 @@ public class MenuCadastroVeiculosSwing extends JFrame {
         painelBotoes.add(cadastrarButton);
         painelBotoes.add(removerButton);
         painelBotoes.add(exibirButton);
+
+        painelTitulo = new JPanel();
+        painelTitulo.add(labelTitulo);
+
+        JPanel painelPrincipal = new JPanel(new BorderLayout());
+        painelPrincipal.add(painelTitulo, BorderLayout.NORTH);
+        painelPrincipal.add(painelBotoes, BorderLayout.CENTER);
 
         //Criar as colunas
         String[] colunas = {"VAGA", "STATUS DA VAGA"};
@@ -64,12 +76,9 @@ public class MenuCadastroVeiculosSwing extends JFrame {
         //Cria a tabela com o modelo
         tabelaVagas = new JTable(modeloTabela);
 
-        JPanel painelPrincipal = new JPanel(new BorderLayout());
-        painelPrincipal.add(painelBotoes, BorderLayout.NORTH);
-
         JScrollPane scrollPane = new JScrollPane(tabelaVagas);
         tabelaVagas.setPreferredScrollableViewportSize(tabelaVagas.getPreferredSize());
-        painelPrincipal.add(scrollPane, BorderLayout.CENTER);
+        painelPrincipal.add(scrollPane, BorderLayout.SOUTH);
 
         add(painelPrincipal);
     }
@@ -106,16 +115,27 @@ public class MenuCadastroVeiculosSwing extends JFrame {
         JOptionPane.showMessageDialog(null, "====== CADASTRO DE VEICULO ======");
         String placa = Utils.obterPlaca();
 
-        if (placa != null) {
+        if (placa == null) {
+            JOptionPane.showMessageDialog(null, "Operação cancelada. Nenhum veículo cadastrado.");
+            return;
+        }
+
+        try{
             int ano = Utils.obterAno();
+
+            if (ano == 0){
+                throw new CancelarEntradaException();
+            }
+
             TipoVeiculo tipoVeiculo = Utils.obterTipoVeiculo();
             Veiculo veiculo = Utils.criarVeiculo(placa, ano, tipoVeiculo);
             sistemaCadastro.cadastrarVeiculo(veiculo);
             atualizarStatusVagasLabels();
             JOptionPane.showMessageDialog(null, "Veiculo cadastrado com sucesso!");
             atualizarStatusVagasLabels();
-        } else {
-            JOptionPane.showMessageDialog(null, "Operação cancelada. Nenhum veículo cadastrado.");
+
+        } catch (CancelarEntradaException e){
+            e.printStackTrace();
         }
     }
 
@@ -139,7 +159,8 @@ public class MenuCadastroVeiculosSwing extends JFrame {
         StringBuilder veiculosCadastrados = new StringBuilder("====== VEÍCULOS CADASTRADOS ======");
 
         if (sistemaCadastro.getQtdVeiculos() == 0) {
-            veiculosCadastrados.append("Não há veículos cadastrados.");
+            veiculosCadastrados.append("\n" +
+                    "Não há veículos cadastrados.");
         } else {
 
             sistemaCadastro.atualizarStatusVagas();
