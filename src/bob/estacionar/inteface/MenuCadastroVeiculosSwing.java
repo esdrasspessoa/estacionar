@@ -84,14 +84,19 @@ public class MenuCadastroVeiculosSwing extends JFrame {
     }
 
     private void anexarOuvintes() {
-        cadastrarButton.addActionListener(e -> cadastrarVeiculo());
-
+        cadastrarButton.addActionListener(e -> {
+            if (sistemaCadastro.getQtdVeiculos() >= SistemaCadastroVeiculos.LIMITE_MAXIMO_VEICULOS) {
+                JOptionPane.showMessageDialog(null, "Não há vagas disponiveis");
+            } else {
+                cadastrarVeiculo();
+            }
+        });
         removerButton.addActionListener(e -> removerVeiculo());
 
         exibirButton.addActionListener(e -> exibirVeiculos());
     }
 
-   private void inicializarVagaLabels(){
+    private void inicializarVagaLabels() {
         vagaLabels = new ArrayList<>();
 
         for (int i = 0; i < SistemaCadastroVeiculos.LIMITE_MAXIMO_VEICULOS; i++) {
@@ -120,10 +125,20 @@ public class MenuCadastroVeiculosSwing extends JFrame {
             return;
         }
 
-        try{
+        while (sistemaCadastro.existePlaca(placa)){
+            JOptionPane.showMessageDialog(null, "A placa informada já esta cadastrada, por favor insira uma placa diferente");
+            placa = Utils.obterPlaca();
+
+            if (placa == null){
+                JOptionPane.showMessageDialog(null, "Operação cancelada");
+                return;
+            }
+        }
+
+        try {
             int ano = Utils.obterAno();
 
-            if (ano == 0){
+            if (ano == 0) {
                 throw new CancelarEntradaException();
             }
 
@@ -134,7 +149,7 @@ public class MenuCadastroVeiculosSwing extends JFrame {
             JOptionPane.showMessageDialog(null, "Veiculo cadastrado com sucesso!");
             atualizarStatusVagasLabels();
 
-        } catch (CancelarEntradaException e){
+        } catch (CancelarEntradaException e) {
             e.printStackTrace();
         }
     }
@@ -145,10 +160,11 @@ public class MenuCadastroVeiculosSwing extends JFrame {
         String placa = JOptionPane.showInputDialog("Informe a placa do veículo a ser removido: ");
         int qtdVeiculosAntesRemocao = sistemaCadastro.getQtdVeiculos();
 
-        sistemaCadastro.removerVeiculo(placa);
-        atualizarStatusVagasLabels();
+        int vaga = sistemaCadastro.encontrarVagaPorVeiculo(placa);
 
-        if (sistemaCadastro.getQtdVeiculos() < qtdVeiculosAntesRemocao) {
+        if (vaga != -1) {
+            sistemaCadastro.removerVeiculo(placa);
+            atualizarStatusVagasLabels();
             JOptionPane.showMessageDialog(null, "Veiculo " + placa + " Removido com sucesso!");
         } else {
             JOptionPane.showMessageDialog(null, "Veiculo não encontrado");

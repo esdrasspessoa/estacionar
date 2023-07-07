@@ -17,7 +17,7 @@ public class SistemaCadastroVeiculos {
         }
     }
 
-    private int encontrarVagaPorVeiculo(String placa) {
+    public int encontrarVagaPorVeiculo(String placa) {
         for (int i = 0; i < qtdVeiculos; i++) {
             if (veiculos[i].getPlaca().equals(placa)) {
                 return i; // Retorna o índice da vaga ocupada pelo veículo
@@ -58,18 +58,30 @@ public class SistemaCadastroVeiculos {
         return false;
     }
 
-    public void cadastrarVeiculo(Veiculo veiculo) {
-        if (qtdVeiculos < veiculos.length) {
-            int vaga = obterProximaVagaDisponivel();
-
-            if (vaga != -1) {
-                veiculos[vaga] = veiculo;
-                vagasDisponiveis[vaga] = false;
-                qtdVeiculos++;
-
-            } else {
-                System.out.println("Não há vagas disponíveis para cadastrar o veículo!");
+    public boolean existePlaca(String placa){
+        for (int i = 0; i < qtdVeiculos; i++) {
+            if (veiculos[i] != null && veiculos[i].getPlaca().equals(placa)){
+                return true;
             }
+        }
+        return false;
+    }
+
+    public void cadastrarVeiculo(Veiculo veiculo) {
+        if (qtdVeiculos >= LIMITE_MAXIMO_VEICULOS) {
+            System.out.println("Não há vagas disponíveis para cadastrar o veículo!");
+            return;
+        }
+
+        int vaga = obterProximaVagaDisponivel();
+
+        if (vaga != -1) {
+            veiculos[vaga] = veiculo;
+            vagasDisponiveis[vaga] = false;
+            qtdVeiculos++;
+            System.out.println("Veículo cadastrado com sucesso!");
+        } else {
+            System.out.println("Não há vagas disponíveis para cadastrar o veículo!");
         }
     }
 
