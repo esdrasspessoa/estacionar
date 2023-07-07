@@ -83,6 +83,14 @@ public class MenuCadastroVeiculosSwing extends JFrame {
         add(painelPrincipal);
     }
 
+    private void anexarOuvintes() {
+        cadastrarButton.addActionListener(e -> cadastrarVeiculo());
+
+        removerButton.addActionListener(e -> removerVeiculo());
+
+        exibirButton.addActionListener(e -> exibirVeiculos());
+    }
+
    private void inicializarVagaLabels(){
         vagaLabels = new ArrayList<>();
 
@@ -101,14 +109,6 @@ public class MenuCadastroVeiculosSwing extends JFrame {
             String vagaStatus = vagaDisponivel ? "Disponível" : "Ocupada";
             modeloTabela.setValueAt(vagaStatus, i, 1);
         }
-    }
-
-    private void anexarOuvintes() {
-        cadastrarButton.addActionListener(e -> cadastrarVeiculo());
-
-        removerButton.addActionListener(e -> removerVeiculo());
-
-        exibirButton.addActionListener(e -> exibirVeiculos());
     }
 
     private void cadastrarVeiculo() {

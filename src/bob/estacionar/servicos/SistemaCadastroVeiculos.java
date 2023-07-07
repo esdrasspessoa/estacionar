@@ -1,21 +1,12 @@
 package bob.estacionar.servicos;
 
 import bob.estacionar.dominio.Veiculo;
-import bob.estacionar.inteface.MenuCadastroVeiculosSwing;
 
 public class SistemaCadastroVeiculos {
     private Veiculo[] veiculos;
     private int qtdVeiculos;
     private boolean[] vagasDisponiveis;
-
-    public boolean[] getVagasDisponiveis() {
-        return vagasDisponiveis;
-    }
-
-    private MenuCadastroVeiculosSwing menu;
-
     public static final int LIMITE_MAXIMO_VEICULOS = 10;
-
     public SistemaCadastroVeiculos(int numVagas) {
         veiculos = new Veiculo[LIMITE_MAXIMO_VEICULOS];
         vagasDisponiveis = new boolean[numVagas];
@@ -24,6 +15,47 @@ public class SistemaCadastroVeiculos {
         for (int i = 0; i < LIMITE_MAXIMO_VEICULOS; i++) {
             vagasDisponiveis[i] = true; // Todas as vagas estão inicialmente livres
         }
+    }
+
+    private int encontrarVagaPorVeiculo(String placa) {
+        for (int i = 0; i < qtdVeiculos; i++) {
+            if (veiculos[i].getPlaca().equals(placa)) {
+                return i; // Retorna o índice da vaga ocupada pelo veículo
+            }
+        }
+        return -1;// Retorna -1 se o veículo não for encontrado
+    }
+
+    private int obterProximaVagaDisponivel() {
+        for (int i = 0; i < veiculos.length; i++) {
+            if (vagasDisponiveis[i]) {
+                return i;// Retorna o índice da primeira vaga disponível encontrada
+            }
+        }
+        return -1;// Retorna -1 se não houver vagas disponíveis
+    }
+
+    public void atualizarStatusVagas() {
+        for (int i = 0; i < veiculos.length; i++) {
+            Veiculo veiculo = veiculos[i];
+            boolean vagaDisponivel = vagasDisponiveis[i];
+
+            if (veiculo != null && !veiculoEstaEstacionado(veiculo)) {
+                vagasDisponiveis[i] = true;
+            } else if (veiculo == null && !vagaDisponivel) {
+                vagasDisponiveis[i] = true;
+            }
+        }
+    }
+
+    private boolean veiculoEstaEstacionado(Veiculo veiculo) {
+        for (int i = 0; i < qtdVeiculos; i++) {
+            if (veiculos[i] != null && veiculos[i].equals(veiculo)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void cadastrarVeiculo(Veiculo veiculo) {
@@ -41,15 +73,6 @@ public class SistemaCadastroVeiculos {
         }
     }
 
-    private int obterProximaVagaDisponivel(){
-        for (int i = 0; i < veiculos.length; i++) {
-            if (vagasDisponiveis[i]){
-                return i;// Retorna o índice da primeira vaga disponível encontrada
-            }
-        }
-        return -1;// Retorna -1 se não houver vagas disponíveis
-    }
-
     public void removerVeiculo(String placa) {
         int index = -1;
 
@@ -64,7 +87,7 @@ public class SistemaCadastroVeiculos {
         if (index != -1) {
             // Libera a vaga ocupada pelo veículo removido
             int vaga = encontrarVagaPorVeiculo(placa);
-            if (vaga != -1){
+            if (vaga != -1) {
                 vagasDisponiveis[vaga] = true; // marca vaga como livre
             }
 
@@ -78,51 +101,23 @@ public class SistemaCadastroVeiculos {
         }
     }
 
-    private int encontrarVagaPorVeiculo(String placa){
-        for (int i = 0; i < qtdVeiculos; i++) {
-            if (veiculos[i].getPlaca().equals(placa)){
-                return i; // Retorna o índice da vaga ocupada pelo veículo
-            }
-        }
-        return -1;// Retorna -1 se o veículo não for encontrado
-    }
-
     public Veiculo[] getVeiculos() {
         return veiculos;
     }
 
-    public void setVeiculos(Veiculo[] veiculos) {
-        this.veiculos = veiculos;
+    public boolean[] getVagasDisponiveis() {
+        return vagasDisponiveis;
     }
 
     public int getQtdVeiculos() {
         return qtdVeiculos;
     }
 
+    public void setVeiculos(Veiculo[] veiculos) {
+        this.veiculos = veiculos;
+    }
+
     public void setQtdVeiculos(int qtdVeiculos) {
         this.qtdVeiculos = qtdVeiculos;
-    }
-
-    public void atualizarStatusVagas(){
-        for (int i = 0; i < veiculos.length; i++) {
-            Veiculo veiculo = veiculos[i];
-            boolean vagaDisponivel = vagasDisponiveis[i];
-
-            if (veiculo != null && !veiculoEstaEstacionado(veiculo)){
-                vagasDisponiveis[i] = true;
-            } else if(veiculo == null && !vagaDisponivel){
-                vagasDisponiveis[i] = true;
-            }
-        }
-    }
-
-    private boolean veiculoEstaEstacionado(Veiculo veiculo){
-        for (int i = 0; i < qtdVeiculos; i++) {
-            if(veiculos[i] != null && veiculos[i].equals(veiculo)){
-                return true;
-            }
-        }
-
-        return false;
     }
 }
