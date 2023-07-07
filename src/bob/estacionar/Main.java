@@ -1,6 +1,6 @@
 package bob.estacionar;
 
-import bob.estacionar.inteface.MenuCadastroVeiculosSwing;
+import bob.estacionar.menu.MenuCadastroVeiculosSwing;
 import bob.estacionar.servicos.SistemaCadastroVeiculos;
 
 public class Main {

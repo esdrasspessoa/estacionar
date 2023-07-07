@@ -14,7 +14,7 @@ public class Caminhao extends Veiculo {
     @Override
     public String exibirDados() {
         StringBuilder dados = new StringBuilder(super.exibirDados());
-       dados.append("Eixos: ").append(this.qtdEixos).append("\n");
+        //dados.append("Eixos: ").append(this.qtdEixos).append("\n");
         return dados.toString();
     }
 

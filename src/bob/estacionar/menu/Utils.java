@@ -1,4 +1,4 @@
-package bob.estacionar.inteface;
+package bob.estacionar.menu;
 
 import bob.estacionar.dominio.TipoVeiculo;
 import bob.estacionar.dominio.Veiculo;
@@ -8,6 +8,7 @@ import bob.estacionar.exception.CancelarEntradaException;
 import bob.estacionar.exception.VeiculoInvalidoException;
 
 import javax.swing.*;
+import java.time.Year;
 
 public class Utils {
     public static String obterPlaca(){
@@ -44,6 +45,9 @@ public class Utils {
         int ano = 0;
         boolean anoValido = false;
 
+        int anoAtual = Year.now().getValue();
+        String limiteSuperior = String.valueOf(anoAtual);
+
         while (!anoValido) {
             try {
                 String anoStr = JOptionPane.showInputDialog("Informe o ano do veículo: (formato: AAAA)");
@@ -55,9 +59,15 @@ public class Utils {
 
                 if (anoStr.matches("\\d{4}")) {
                     ano = Integer.parseInt(anoStr);
-                    anoValido = true;
+
+                    //Verificação se o ano esta dentro de um intervalo valido
+                    if (ano >= 1900 && ano <= Integer.parseInt(limiteSuperior)){
+                        anoValido = true;
+                    }else {
+                        JOptionPane.showMessageDialog(null, "Ano inválido. Digite um ano entre 1900 e " + limiteSuperior + ".");
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Ano inválido. Digite um número de 4 digitos: (ex: 2023");
+                    JOptionPane.showMessageDialog(null, "Ano inválido. Digite um número de 4 digitos: (ex: " + limiteSuperior);
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Ano inválido. Digite um numero inteiro!");
@@ -71,17 +81,19 @@ public class Utils {
     }
 
     public static TipoVeiculo obterTipoVeiculo(){
-        String[] opcoesTipo = new String[]{TipoVeiculo.ONIBUS.getDescricao(), TipoVeiculo.CAMINHAO.getDescricao()};
+        String[] opcoesTipo = new String[]{TipoVeiculo.ONIBUS.getDescricao(), TipoVeiculo.CAMINHAO.getDescricao(), TipoVeiculo.CARRO.getDescricao()};
         JComboBox<String> comboBox = new JComboBox<>(opcoesTipo);
         JOptionPane.showMessageDialog(null,comboBox,"Selecionne o tipo de veiculo:", JOptionPane.QUESTION_MESSAGE);
 
         String tipoVeiculoSelecionado = (String) comboBox.getSelectedItem();
         TipoVeiculo tipoVeiculo = null;
 
-        if(tipoVeiculoSelecionado.equals(TipoVeiculo.ONIBUS.getDescricao())){
-            tipoVeiculo = TipoVeiculo.ONIBUS;
+        if(tipoVeiculoSelecionado.equals(TipoVeiculo.CARRO.getDescricao())){
+            tipoVeiculo = TipoVeiculo.CARRO;
         } else if(tipoVeiculoSelecionado.equals(TipoVeiculo.CAMINHAO.getDescricao())) {
              tipoVeiculo = TipoVeiculo.CAMINHAO;
+        } else if (tipoVeiculoSelecionado.equals(TipoVeiculo.ONIBUS.getDescricao())){
+            tipoVeiculo = TipoVeiculo.ONIBUS;
         }
 
         return tipoVeiculo;
@@ -89,19 +101,19 @@ public class Utils {
 
     public static Veiculo criarVeiculo(String placa, int ano, TipoVeiculo tipoVeiculo){
         if (tipoVeiculo == TipoVeiculo.ONIBUS) {
-            int qtdAssentos = obterQuantidadeAssentos();
+            //int qtdAssentos = obterQuantidadeAssentos();
             Onibus onibus = new Onibus(placa, ano, tipoVeiculo);
-            onibus.setQtdAssentos(qtdAssentos);
+            //onibus.setQtdAssentos(qtdAssentos);
             return onibus;
         } else {
-            int qtdEixos = obterQuantidadeEixos();
+            //int qtdEixos = obterQuantidadeEixos();
             Caminhao caminhao = new Caminhao(placa, ano, tipoVeiculo);
-            caminhao.setQtdEixos(qtdEixos);
+            //caminhao.setQtdEixos(qtdEixos);
             return caminhao;
         }
     }
 
-    public static int obterQuantidadeAssentos(){
+    /*public static int obterQuantidadeAssentos(){
         int qtdAssentos = 0;
         boolean qtdAssentosValida = false;
 
@@ -135,5 +147,5 @@ public class Utils {
         }
 
         return qtdEixos;
-    }
+    }*/
 }

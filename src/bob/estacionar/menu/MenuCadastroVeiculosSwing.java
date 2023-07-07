@@ -1,4 +1,4 @@
-package bob.estacionar.inteface;
+package bob.estacionar.menu;
 
 import bob.estacionar.dominio.TipoVeiculo;
 import bob.estacionar.dominio.Veiculo;
@@ -117,7 +117,6 @@ public class MenuCadastroVeiculosSwing extends JFrame {
     }
 
     private void cadastrarVeiculo() {
-        JOptionPane.showMessageDialog(null, "====== CADASTRO DE VEICULO ======");
         String placa = Utils.obterPlaca();
 
         if (placa == null) {
@@ -155,8 +154,6 @@ public class MenuCadastroVeiculosSwing extends JFrame {
     }
 
     private void removerVeiculo() {
-        JOptionPane.showMessageDialog(null, "====== REMOVER VEÍCULO ======");
-
         String placa = JOptionPane.showInputDialog("Informe a placa do veículo a ser removido: ");
         int qtdVeiculosAntesRemocao = sistemaCadastro.getQtdVeiculos();
 
@@ -189,7 +186,17 @@ public class MenuCadastroVeiculosSwing extends JFrame {
             }
         }
 
-        JOptionPane.showMessageDialog(null, veiculosCadastrados.toString());
+        JTextArea textArea = new JTextArea(veiculosCadastrados.toString());
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(300, 300));
+
+        //JOptionPane.showMessageDialog(null, veiculosCadastrados.toString());
+        JOptionPane.showMessageDialog(null, scrollPane, "Veículos Cadastrados", JOptionPane.PLAIN_MESSAGE);
     }
 
 }

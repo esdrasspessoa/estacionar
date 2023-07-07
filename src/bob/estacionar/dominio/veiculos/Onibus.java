@@ -13,7 +13,7 @@ public class Onibus extends Veiculo {
     @Override
     public String exibirDados() {
         StringBuilder dados = new StringBuilder(super.exibirDados());
-        dados.append("Assentos: ").append(this.qtdAssentos).append("\n");
+        //dados.append("Assentos: ").append(this.qtdAssentos).append("\n");
         return dados.toString();
     }
 

@@ -1,13 +1,13 @@
 package bob.estacionar.servicos;
 
 import bob.estacionar.dominio.Veiculo;
+import bob.estacionar.interfaces.CadastroVeiculos;
+import bob.estacionar.interfaces.Vagas;
 
-public class SistemaCadastroVeiculos {
+public class SistemaCadastroVeiculos implements CadastroVeiculos, Vagas {
     private Veiculo[] veiculos;
     private int qtdVeiculos;
     private boolean[] vagasDisponiveis;
-
-    //eu to aqui
     public static final int LIMITE_MAXIMO_VEICULOS = 10;
     public SistemaCadastroVeiculos(int numVagas) {
         veiculos = new Veiculo[LIMITE_MAXIMO_VEICULOS];
@@ -28,7 +28,7 @@ public class SistemaCadastroVeiculos {
         return -1;// Retorna -1 se o veículo não for encontrado
     }
 
-    private int obterProximaVagaDisponivel() {
+    public int obterProximaVagaDisponivel() {
         for (int i = 0; i < veiculos.length; i++) {
             if (vagasDisponiveis[i]) {
                 return i;// Retorna o índice da primeira vaga disponível encontrada
@@ -50,7 +50,7 @@ public class SistemaCadastroVeiculos {
         }
     }
 
-    private boolean veiculoEstaEstacionado(Veiculo veiculo) {
+    public boolean veiculoEstaEstacionado(Veiculo veiculo) {
         for (int i = 0; i < qtdVeiculos; i++) {
             if (veiculos[i] != null && veiculos[i].equals(veiculo)) {
                 return true;
@@ -125,13 +125,5 @@ public class SistemaCadastroVeiculos {
 
     public int getQtdVeiculos() {
         return qtdVeiculos;
-    }
-
-    public void setVeiculos(Veiculo[] veiculos) {
-        this.veiculos = veiculos;
-    }
-
-    public void setQtdVeiculos(int qtdVeiculos) {
-        this.qtdVeiculos = qtdVeiculos;
     }
 }

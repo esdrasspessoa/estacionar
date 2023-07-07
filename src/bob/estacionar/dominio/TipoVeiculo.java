@@ -1,8 +1,10 @@
 package bob.estacionar.dominio;
 
 public enum TipoVeiculo {
+    CARRO("Carro"),
     ONIBUS("Ônibus"),
     CAMINHAO("Caminhão");
+
 
    private String descricao;
 
