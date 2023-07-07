@@ -6,6 +6,8 @@ public class SistemaCadastroVeiculos {
     private Veiculo[] veiculos;
     private int qtdVeiculos;
     private boolean[] vagasDisponiveis;
+
+    //eu to aqui
     public static final int LIMITE_MAXIMO_VEICULOS = 10;
     public SistemaCadastroVeiculos(int numVagas) {
         veiculos = new Veiculo[LIMITE_MAXIMO_VEICULOS];
