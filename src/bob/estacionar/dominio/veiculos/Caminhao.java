@@ -6,8 +6,8 @@ import bob.estacionar.dominio.Veiculo;
 
 public class Caminhao extends Veiculo {
 
-    public Caminhao(String placa, int ano, TipoVeiculo tipoVeiculo) {
-        super(placa, ano, tipoVeiculo);
+    public Caminhao(String placa, int ano) {
+        super(placa, ano, TipoVeiculo.CAMINHAO);
     }
 
     @Override

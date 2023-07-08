@@ -4,6 +4,7 @@ import bob.estacionar.dominio.TipoVeiculo;
 import bob.estacionar.dominio.Veiculo;
 import bob.estacionar.dominio.veiculos.Caminhao;
 import bob.estacionar.dominio.veiculos.Carro;
+import bob.estacionar.dominio.veiculos.Motocicleta;
 import bob.estacionar.dominio.veiculos.Onibus;
 import bob.estacionar.exception.CancelarEntradaException;
 import bob.estacionar.exception.VeiculoInvalidoException;
@@ -12,7 +13,7 @@ import javax.swing.*;
 import java.time.Year;
 
 public class Utils {
-    public static String obterPlaca(){
+    public static String obterPlaca() {
         String placa = null;
         boolean placaValida = false;
 
@@ -20,7 +21,7 @@ public class Utils {
             try {
                 String placaStr = JOptionPane.showInputDialog("Informe a placa do veículo (formato: XXX-9999):");
 
-                if (placaStr == null){
+                if (placaStr == null) {
                     return null;
                 }
 
@@ -41,7 +42,7 @@ public class Utils {
         return placa;
     }
 
-    public static int obterAno(){
+    public static int obterAno() {
         int ano = 0;
         boolean anoValido = false;
 
@@ -54,16 +55,16 @@ public class Utils {
 
                 if (anoStr == null) {
                     // Usuário cancelou a entrada do ano
-                   throw new CancelarEntradaException();
+                    throw new CancelarEntradaException();
                 }
 
                 if (anoStr.matches("\\d{4}")) {
                     ano = Integer.parseInt(anoStr);
 
                     //Verificação se o ano esta dentro de um intervalo valido
-                    if (ano >= 1900 && ano <= Integer.parseInt(limiteSuperior)){
+                    if (ano >= 1900 && ano <= Integer.parseInt(limiteSuperior)) {
                         anoValido = true;
-                    }else {
+                    } else {
                         JOptionPane.showMessageDialog(null, "Ano inválido. Digite um ano entre 1900 e " + limiteSuperior + ".");
                     }
                 } else {
@@ -71,7 +72,7 @@ public class Utils {
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Ano inválido. Digite um numero inteiro!");
-            } catch (CancelarEntradaException e){
+            } catch (CancelarEntradaException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
                 return 0;
             }
@@ -80,35 +81,40 @@ public class Utils {
         return ano;
     }
 
-    public static TipoVeiculo obterTipoVeiculo(){
+    public static TipoVeiculo obterTipoVeiculo() {
         String[] opcoesTipo = new String[]{TipoVeiculo.ONIBUS.getDescricao(), TipoVeiculo.CAMINHAO.getDescricao(), TipoVeiculo.CARRO.getDescricao()};
         JComboBox<String> comboBox = new JComboBox<>(opcoesTipo);
-        JOptionPane.showMessageDialog(null,comboBox,"Selecionne o tipo de veiculo:", JOptionPane.QUESTION_MESSAGE);
+        JOptionPane.showMessageDialog(null, comboBox, "Selecionne o tipo de veiculo:", JOptionPane.QUESTION_MESSAGE);
 
         String tipoVeiculoSelecionado = (String) comboBox.getSelectedItem();
         TipoVeiculo tipoVeiculo = null;
 
-        if(tipoVeiculoSelecionado.equals(TipoVeiculo.CARRO.getDescricao())){
+        if (tipoVeiculoSelecionado.equals(TipoVeiculo.CARRO.getDescricao())) {
             tipoVeiculo = TipoVeiculo.CARRO;
-        } else if(tipoVeiculoSelecionado.equals(TipoVeiculo.CAMINHAO.getDescricao())) {
-             tipoVeiculo = TipoVeiculo.CAMINHAO;
-        } else if (tipoVeiculoSelecionado.equals(TipoVeiculo.ONIBUS.getDescricao())){
+        } else if (tipoVeiculoSelecionado.equals(TipoVeiculo.CAMINHAO.getDescricao())) {
+            tipoVeiculo = TipoVeiculo.CAMINHAO;
+        } else if (tipoVeiculoSelecionado.equals(TipoVeiculo.ONIBUS.getDescricao())) {
             tipoVeiculo = TipoVeiculo.ONIBUS;
         }
 
         return tipoVeiculo;
     }
 
-    public static Veiculo criarVeiculo(String placa, int ano, TipoVeiculo tipoVeiculo){
-        if (tipoVeiculo == TipoVeiculo.ONIBUS) {
-            Onibus onibus = new Onibus(placa, ano, tipoVeiculo);
-            return onibus;
-        } else if(tipoVeiculo == TipoVeiculo.CAMINHAO){
-            Caminhao caminhao = new Caminhao(placa, ano, tipoVeiculo);
-            return caminhao;
-        } else {
-            Carro carro = new Carro(placa, ano, tipoVeiculo);
-            return carro;
+    public static Veiculo criarVeiculo(String placa, int ano, TipoVeiculo tipoVeiculo) {
+        Veiculo veiculo;
+
+        switch (tipoVeiculo) {
+            case CARRO -> veiculo = new Carro(placa, ano);
+
+            case ONIBUS -> veiculo = new Onibus(placa, ano);
+
+            case CAMINHAO -> veiculo = new Caminhao(placa, ano);
+
+            case MOTOCICLETA -> veiculo = new Motocicleta(placa, ano);
+
+            default -> throw new IllegalArgumentException("Tipo de veiculo inválido: " + tipoVeiculo);
         }
+
+        return veiculo;
     }
 }
