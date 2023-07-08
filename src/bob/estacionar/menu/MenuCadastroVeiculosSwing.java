@@ -154,17 +154,23 @@ public class MenuCadastroVeiculosSwing extends JFrame {
     }
 
     private void removerVeiculo() {
-        String placa = JOptionPane.showInputDialog("Informe a placa do veículo a ser removido: ");
-        //int qtdVeiculosAntesRemocao = sistemaCadastro.getQtdVeiculos();
+        boolean placaValida = false;
 
-        int vaga = sistemaCadastro.encontrarVagaPorVeiculo(placa);
+        while (!placaValida){
+            String placa = JOptionPane.showInputDialog("Informe a placa do veículo a ser removido: ");
 
-        if (vaga != -1) {
-            sistemaCadastro.removerVeiculo(placa);
-            atualizarStatusVagasLabels();
-            JOptionPane.showMessageDialog(null, "Veiculo " + placa + " Removido com sucesso!");
-        } else {
-            JOptionPane.showMessageDialog(null, "Veiculo não encontrado");
+            if (placa != null && placa.trim().length() > 0){
+                int vaga = sistemaCadastro.encontrarVagaPorVeiculo(placa);
+
+                if (vaga != -1) {
+                    sistemaCadastro.removerVeiculo(placa);
+                    atualizarStatusVagasLabels();
+                    JOptionPane.showMessageDialog(null, "Veiculo " + placa + " Removido com sucesso!");
+                    placaValida = true;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Veiculo não encontrado");
+                }
+            }
         }
     }
 

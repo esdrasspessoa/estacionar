@@ -3,6 +3,7 @@ package bob.estacionar.menu;
 import bob.estacionar.dominio.TipoVeiculo;
 import bob.estacionar.dominio.Veiculo;
 import bob.estacionar.dominio.veiculos.Caminhao;
+import bob.estacionar.dominio.veiculos.Carro;
 import bob.estacionar.dominio.veiculos.Onibus;
 import bob.estacionar.exception.CancelarEntradaException;
 import bob.estacionar.exception.VeiculoInvalidoException;
@@ -39,7 +40,6 @@ public class Utils {
 
         return placa;
     }
-
 
     public static int obterAno(){
         int ano = 0;
@@ -103,9 +103,12 @@ public class Utils {
         if (tipoVeiculo == TipoVeiculo.ONIBUS) {
             Onibus onibus = new Onibus(placa, ano, tipoVeiculo);
             return onibus;
-        } else {
+        } else if(tipoVeiculo == TipoVeiculo.CAMINHAO){
             Caminhao caminhao = new Caminhao(placa, ano, tipoVeiculo);
             return caminhao;
+        } else {
+            Carro carro = new Carro(placa, ano, tipoVeiculo);
+            return carro;
         }
     }
 }
