@@ -101,51 +101,11 @@ public class Utils {
 
     public static Veiculo criarVeiculo(String placa, int ano, TipoVeiculo tipoVeiculo){
         if (tipoVeiculo == TipoVeiculo.ONIBUS) {
-            //int qtdAssentos = obterQuantidadeAssentos();
             Onibus onibus = new Onibus(placa, ano, tipoVeiculo);
-            //onibus.setQtdAssentos(qtdAssentos);
             return onibus;
         } else {
-            //int qtdEixos = obterQuantidadeEixos();
             Caminhao caminhao = new Caminhao(placa, ano, tipoVeiculo);
-            //caminhao.setQtdEixos(qtdEixos);
             return caminhao;
         }
     }
-
-    /*public static int obterQuantidadeAssentos(){
-        int qtdAssentos = 0;
-        boolean qtdAssentosValida = false;
-
-        while (!qtdAssentosValida) {
-            try {
-                String qtdAssentosStr = JOptionPane.showInputDialog("Informe a quantidade de assentos: ");
-
-                qtdAssentos = Integer.parseInt(qtdAssentosStr);
-                qtdAssentosValida = true;
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null,"Quantidade de assentos inválidas, digite um numero inteiro");
-            }
-        }
-
-        return qtdAssentos;
-    }
-
-    public static int obterQuantidadeEixos(){
-        int qtdEixos = 0;
-        boolean qtdEixosValida = false;
-
-        while (!qtdEixosValida) {
-            try {
-                String qtdEixosStr = JOptionPane.showInputDialog("Informe a quantidade de eixos: ");
-
-                qtdEixos = Integer.parseInt(qtdEixosStr);
-                qtdEixosValida = true;
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null,"Quantidade de eixos invalida, digite um numeto inteiro.");
-            }
-        }
-
-        return qtdEixos;
-    }*/
 }

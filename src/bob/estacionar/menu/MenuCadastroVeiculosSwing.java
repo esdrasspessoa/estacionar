@@ -155,7 +155,7 @@ public class MenuCadastroVeiculosSwing extends JFrame {
 
     private void removerVeiculo() {
         String placa = JOptionPane.showInputDialog("Informe a placa do veículo a ser removido: ");
-        int qtdVeiculosAntesRemocao = sistemaCadastro.getQtdVeiculos();
+        //int qtdVeiculosAntesRemocao = sistemaCadastro.getQtdVeiculos();
 
         int vaga = sistemaCadastro.encontrarVagaPorVeiculo(placa);
 

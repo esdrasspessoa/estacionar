@@ -5,7 +5,6 @@ public enum TipoVeiculo {
     ONIBUS("Ônibus"),
     CAMINHAO("Caminhão");
 
-
    private String descricao;
 
     TipoVeiculo(String descricao) {
