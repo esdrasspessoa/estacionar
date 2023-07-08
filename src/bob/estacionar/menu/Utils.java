@@ -82,7 +82,7 @@ public class Utils {
     }
 
     public static TipoVeiculo obterTipoVeiculo() {
-        String[] opcoesTipo = new String[]{TipoVeiculo.ONIBUS.getDescricao(), TipoVeiculo.CAMINHAO.getDescricao(), TipoVeiculo.CARRO.getDescricao()};
+        String[] opcoesTipo = new String[]{TipoVeiculo.ONIBUS.getDescricao(), TipoVeiculo.CAMINHAO.getDescricao(), TipoVeiculo.CARRO.getDescricao(), TipoVeiculo.MOTOCICLETA.getDescricao()};
         JComboBox<String> comboBox = new JComboBox<>(opcoesTipo);
         JOptionPane.showMessageDialog(null, comboBox, "Selecionne o tipo de veiculo:", JOptionPane.QUESTION_MESSAGE);
 
@@ -95,6 +95,8 @@ public class Utils {
             tipoVeiculo = TipoVeiculo.CAMINHAO;
         } else if (tipoVeiculoSelecionado.equals(TipoVeiculo.ONIBUS.getDescricao())) {
             tipoVeiculo = TipoVeiculo.ONIBUS;
+        } else if (tipoVeiculoSelecionado.equals(TipoVeiculo.MOTOCICLETA.getDescricao())) {
+            tipoVeiculo = TipoVeiculo.MOTOCICLETA;
         }
 
         return tipoVeiculo;
