@@ -6,7 +6,7 @@ public enum TipoVeiculo {
     ONIBUS("Ônibus"),
     CAMINHAO("Caminhão");
 
-   private String descricao;
+    private String descricao;
 
     TipoVeiculo(String descricao) {
         this.descricao = descricao;
