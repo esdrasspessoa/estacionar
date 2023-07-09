@@ -46,6 +46,7 @@ disponíveis:
 - Exibir Veículos: clique neste botão para exibir a lista de veículos atualmente estacionados.
 
     ![Exibir_Veiculos](img/exibirveiculo.gif)
+
 Limitações
 ----------
 
