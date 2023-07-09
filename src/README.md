@@ -37,7 +37,7 @@ disponíveis:
 
 - Cadastrar Veículo: clique neste botão para cadastrar um novo veículo. Será solicitado informar a placa, ano e tipo de
   veículo.
-- [Cadastrar Veiculo](img/cadastrarveiculo.gif)
+- ![Cadastrar Veiculo](img/cadastrarveiculo.gif)
 - Remover Veículo: clique neste botão para remover um veículo do estacionamento. Será solicitado informar a placa do
   veículo a ser removido.
 - Exibir Veículos: clique neste botão para exibir a lista de veículos atualmente estacionados.
