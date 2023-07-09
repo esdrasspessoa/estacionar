@@ -25,7 +25,7 @@ public class Utils {
                     return null;
                 }
 
-                placaStr = placaStr.toUpperCase();
+                //placaStr = placaStr.toUpperCase();
 
                 if (placaStr.matches("[A-Z]{3}-\\d{4}")) {
                     placa = placaStr;
